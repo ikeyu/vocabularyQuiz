@@ -92,19 +92,23 @@ $(function(){
     quizSpeech(answer);
     utterance.onend = function(){
       if (question == answer) {
-        soundPlay("seikai");randomWrongAnswer
-        setTimeout(randomResponses, 800);
+        soundPlay("seikai");
         audio.onended = function() {
-          quizSpeech(answer);          
+          randomResponses()
+          audio.onended = function(){
+            quizSpeech(answer);
+          }          
         }
         utterance.onend = function(){
           setTimeout(nextQuestion, 1000);
         }
       } else {
         soundPlay("zannen");
-        setTimeout(randomWrongAnswer, 500);
         audio.onended = function() {
-          quizSpeech(answer);          
+          randomWrongAnswer()
+          audio.onended = function(){
+            quizSpeech(question);
+          }          
         }
         utterance.onend = function(){
           setTimeout(nextQuestion, 1000);
