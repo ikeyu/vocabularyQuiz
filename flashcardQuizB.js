@@ -156,10 +156,7 @@ $(function(){
     speechSynthesis.speak(utterance);
     utterance.onend = function(){
       utterance.volume = 1;
-      playOnce();
-      utterance.onend = function(){
-        setTimeout(choicesPlay, 1000);     
-      }
+      setTimeout(choicesPlay, 500);     
     }
   }
 
