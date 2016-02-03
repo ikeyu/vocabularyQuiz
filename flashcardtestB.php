@@ -14,7 +14,6 @@ if (!$quiz->isFinished()) {
   $answerSheet =  $_SESSION['checkAnswer'];
   $score = $quiz->getScore();
   $totalQuizNum = $quiz->totalQuizNum();
-  $numberOfRows = $totalQuizNum / 2;
   $i = 0;
 
 ?>
@@ -25,7 +24,7 @@ if (!$quiz->isFinished()) {
   <meta charset="utf-8">
   <link rel="stylesheet" href="css/reset.css">
   <!-- <link rel="shortcut icon" href="images/logofav.png" > -->
-  <link href='https://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Slackey' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
   <meta name="viewport" content="width=device-width, initial-scale=1 ,maximum-scale=1">
   <link rel="stylesheet" media="all" type="text/css" href="css/styles.css" /> 
@@ -35,9 +34,10 @@ if (!$quiz->isFinished()) {
 </head>
 <body>
 <div class="wrapper">
+  <div class="titleArea"><img src="logo.png" height="35px" class="logo"><span class="titleSpan">Digital English</span></div>
   <?php if ($quiz->isFinished()) : ?>
-    <a href="">finished!</a>
-      <div class="score"><?php echo $score; ?>点</div>
+
+      <div id="eval">Very Good</div>
 
       <table class="scoreTable">
       <tr>
@@ -45,12 +45,19 @@ if (!$quiz->isFinished()) {
         <?php if ($i != 0 && $i % 3 == 0) {echo "</tr><tr>";} $i++; ?>
         <td><?php echo $i; ?></td>
         <td><?php if ($key == $answer) {echo '<img src="mark_maru.svg" height="40px">';} else {echo '<img src="mark_batsu.svg" height="40px">';} ?></td>
-        <td><img src="<?php echo 'zodiac/' . $key . '.svg'; ?>" height="100px"></td>
+        <td><img src="<?php echo 'zodiac/' . $key . '.svg'; ?>" height="80px"></td>
         <td></td>
       <?php endforeach; ?>
       </tr>      
       </table>
-     
+    <div class="bottom">
+      <div class="circle-line">
+      <div class="score">Score<span class="scoreLabel"><?php echo $score; ?></span></div>
+      <div><a href="" class="btn">Try Again</a></div>
+      <div><a href="" class="btn">Menu</a></div>
+      </div>
+
+    </div>
 
     <?php $quiz->reset(); ?>
   <?php else : ?>
@@ -68,21 +75,34 @@ if (!$quiz->isFinished()) {
         <div id="alert"></div>
       </div>
     </div>
-
         <!-- <form action="" method="post"> -->
     <div class="choiceArea">
       <table style="margin: 0 auto" id="choices">
       <tr>
         <?php foreach ($data['choices'] as $choises) : ?>
-        <td class="choiceImg"><img class="answer" name="<?php echo $choises; ?>" src="music.svg" height="250px"></td>
+        <td class="choiceImg"><img class="answer" name="<?php echo $choises; ?>" src="music.svg" height="200px"></td>
         <?php endforeach; ?>
       </tr>      
       </table>
     </div>
 
+    <div class="bottom">
+      <div class="circle-line">
+        <?php for ($i = 0; $i < $totalQuizNum; $i++) {
+          if ($i < $_SESSION['current_num']) {
+            echo '<div class="circles"><div class="circle"></div><div class="line"></div></div>';
+          } elseif ($i == $_SESSION['current_num']) {
+            echo '<div class="circles"><div class="circle white"></div>';
+          } else {
+            echo '<div class="line"></div></div><div class="circles"><div class="circle gray"></div>';
+          }
+        } ?>
+      </div>
+    </div>
+  <?php endif; ?>
 </div><!--wrapper-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 <script src="flashcardQuizB.js"></script>
-<?php endif; ?>
+
 </body>
 </html>
