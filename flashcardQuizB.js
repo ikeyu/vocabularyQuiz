@@ -3,11 +3,8 @@ $(function(){
 
   'use strict';
 
-  var voices;
+  var voices, timer1, timer2;
   var audio = new Audio();
-  // audio.src = "seikai.mp3";
-  var play = document.getElementById('playBtn');
-  var next = document.getElementById('nextBtn');
   var question = document.getElementById('question').innerHTML;
   var utterance = new SpeechSynthesisUtterance();
       utterance.volume = 1;
@@ -79,6 +76,8 @@ $(function(){
   var nowPlaying = 0;
 
   $('.answer').on('click', function() {
+    clearTimeout(timer1);
+    clearTimeout(timer2);
 
     if($('.answer').hasClass('disabled')) {
       return
@@ -134,20 +133,25 @@ $(function(){
   }
 
   $('#playBtn').on('click',function(){
-    choicesPlay();
+    clearTimeout(timer1);
+
+    if(nowPlaying === 1) {
+      return
+    }
+    timer2 = setTimeout(choicesPlay, 10);
   });
 
-  var playOnce = function() {
-    // ボタンがすでに押されているか、問題が取得できてない場合
-    if($('#playBtn').hasClass('disabled') || nowPlaying ==1) {
-      return
-    }  
-    bothDisabled()
-    $('.effectBtn').addClass('click');
-    setTimeout(speakOut, 500);
-    setTimeout(removeEffect, 1600);
-    setTimeout(bothActive, 1600);
-  }
+  // var playOnce = function() {
+  //   // ボタンがすでに押されているか、問題が取得できてない場合
+  //   if($('#playBtn').hasClass('disabled') || nowPlaying ==1) {
+  //     return
+  //   }  
+  //   bothDisabled()
+  //   $('.effectBtn').addClass('click');
+  //   setTimeout(speakOut, 500);
+  //   setTimeout(removeEffect, 1600);
+  //   setTimeout(bothActive, 1600);
+  // }
 
   var init = function (){
     loadVoices();
@@ -156,11 +160,14 @@ $(function(){
     speechSynthesis.speak(utterance);
     utterance.onend = function(){
       utterance.volume = 1;
-      setTimeout(choicesPlay, 500);     
+      timer1 = setTimeout(choicesPlay, 500);     
     }
   }
 
   var choicesPlay = function(){
+
+    nowPlaying = 1;
+
     loadVoices();
     var choices = $("#choices td:nth-child(1) img");
     var execute = function(){
@@ -178,13 +185,16 @@ $(function(){
         choices = $("#choices td:nth-child(3) img");
         setTimeout(execute, 700);
         utterance.onend = function (){
-          choices.removeClass('click');      
+          choices.removeClass('click');
+          nowPlaying = 0;      
         }
       }
     }
   }
 
   init();
+  // timer1 = setTimeout(init, 20);
+
 
   var removeEffect = function() {
     $('.effectBtn').removeClass('click');
